@@ -24,6 +24,7 @@ public class PushPlugin extends CordovaPlugin {
 
 	public static final String REGISTER = "register";
 	public static final String UNREGISTER = "unregister";
+	public static final String REGISTER_ECB = "registerECB";
 	public static final String EXIT = "exit";
 
 	private static CordovaWebView gWebView;
@@ -77,6 +78,25 @@ public class PushPlugin extends CordovaPlugin {
 				gCachedExtras = null;
 			}
 
+		}else if(REGISTER_ECB.equals(action)){
+			try {
+				gWebView = this.webView;
+				JSONObject jo = data.getJSONObject(0);
+				gECB = (String) jo.get("ecb");
+				Log.v(TAG, "ECB set to: " + gECB);
+				result = true;
+				callbackContext.success();
+
+				if ( gCachedExtras != null) {
+					Log.v(TAG, "sending cached extras");
+					sendExtras(gCachedExtras);
+					gCachedExtras = null;
+				}
+			} catch (JSONException e) {
+				Log.e(TAG, "execute: Got JSON Exception " + e.getMessage());
+				result = false;
+				callbackContext.error(e.getMessage());
+			}
 		} else if (UNREGISTER.equals(action)) {
 
 			GCMRegistrar.unregister(getApplicationContext());

@@ -19,6 +19,23 @@ PushNotification.prototype.register = function(successCallback, errorCallback, o
     cordova.exec(successCallback, errorCallback, "PushPlugin", "register", [options]);
 };
 
+PushNotification.prototype.registerECB = function(successCallback, errorCallback, ecbCallbackName) {
+    if (errorCallback == null) { errorCallback = function() {}}
+
+    if (typeof errorCallback != "function")  {
+        console.log("PushNotification.registerECB failure: failure parameter not a function");
+        return
+    }
+
+    if (typeof successCallback != "function") {
+        console.log("PushNotification.registerECB failure: success callback parameter must be a function");
+        return
+    }
+
+    cordova.exec(successCallback, errorCallback,"PushPlugin", "registerECB", [{"ecb":ecbCallbackName}]);
+};
+
+
 // Call this to unregister for push notifications
 PushNotification.prototype.unregister = function(successCallback, errorCallback, options) {
     if (errorCallback == null) { errorCallback = function() {}}
